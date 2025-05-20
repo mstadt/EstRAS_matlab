@@ -165,5 +165,81 @@ if exitflag == 1
     fprintf('AT2R:   %0.2f \n', SSdat(8))
 end
 
+%% Bar plot with steady state results
+f = figure(2);
+clf;
+width = 1600;
+height = 800;
+f.Position = [100, 100, width, height];
+tiledlayout(2,3);
+
+% AGT
+nexttile(1);
+id = 2;
+hold on;
+bar(SSdat(id)/1000)
+xticks([])
+grid on
+ylabel('[AGT] (fmol/L)')
+set(gca,'fontsize',fsize)
+
+% Renin (PRC)
+nexttile(2);
+id = 1;
+hold on;
+bar(SSdat(id))
+grid on
+xticks([])
+set(gca,'fontsize',fsize)
+ylabel('[Renin] (mU/L)')
+
+
+% Ang I
+nexttile(3);
+id = 3;
+hold on;
+bar(SSdat(id))
+grid on
+xticks([])
+set(gca,'fontsize',fsize)
+ylabel('[Ang I] (pmol/L)')
+
+
+% Ang II
+nexttile(4);
+id = 4;
+hold on;
+bar(SSdat(id))
+grid on
+xticks([])
+set(gca,'fontsize',fsize)
+ylabel('[Ang II] (pmol/L)')
+
+
+% AT1R
+nexttile(5);
+id = 7;
+hold on;
+bar(SSdat(id))
+grid on
+xticks([])
+set(gca,'fontsize',fsize)
+ylabel('[AT1R-bound Ang II] (pmol/L)')
+
+% AT2R
+nexttile(6);
+id = 8;
+hold on;
+bar(SSdat(id))
+grid on
+xticks([])
+set(gca,'fontsize',fsize)
+ylabel('[AT2R-bound Ang II] (pmol/L)')
+
+
+AddLetters2Plots(figure(2), {'(A)', '(B)', '(C)', '(D)', '(E)','(F)'},...
+                'HShift', -0.07, 'VShift', -0.07,...
+                'fontsize', 20)
+
 
 
