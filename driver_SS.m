@@ -8,15 +8,17 @@ p = set_params();
 
 [params, parnames] = pars2vector(p, 0);
 
-%% set initial conditions
-load("./IC/2025-05-20_ICfinal.mat", "IC");
-
 %% Optional model inputs
-do_EST = 0;
+do_EST = 2; % do estrogen effects - 0 - no estrogen, 1: age-related estrogen decline, 2: fix estrogen at EST_pct
+do_EST_RAS = 1; % do estrogen effects on RAS
+EST_pct = 1; % percent of baseline estrogen
 do_ACEi = false;
 do_ARB = false;
 
-% Run simulation
+%% Run simulation from initial condition
+% set initial conditions
+load("./IC/2025-05-20_ICfinal.mat", "IC");
+
 fprintf("solving ODEs \n")
 
 % timespan
@@ -27,7 +29,7 @@ tspan = [t0, tf];
 opts_ode = odeset('RelTol', 1.0e-6, 'AbsTol', 1e-9, 'MaxStep', 10);
 
 [t,y] = ode15s(@(t,y) mod_eqns(t,y,params,...
-                        'do_EST', do_EST,...
+                        'do_EST', [do_EST, do_EST_RAS, EST_pct],...
                         'do_ACEi', do_ACEi,...
                         'do_ARB', do_ARB),...
                         tspan, IC, opts_ode);
@@ -39,6 +41,9 @@ cmap = summer(5);
 c1 = cmap(3,:);
 fsize = 16;
 xlab = 't';
+
+figure(1);
+clf;
 
 nexttile;
 id = 1;
@@ -137,7 +142,7 @@ opts_fsolve = optimoptions('fsolve','Display', 'none',...
                                 'FunctionTolerance', 1e-16);
 [SSdat, residual, ...
     exitflag, output] = fsolve(@(y) mod_eqns(0, y, params,...
-                                        "do_EST", do_EST,...
+                                        "do_EST", [do_EST, do_EST_RAS, EST_pct],...
                                         "do_ACEi", do_ACEi,...
                                         "do_ARB", do_ARB),...
                                         IG, opts_fsolve);

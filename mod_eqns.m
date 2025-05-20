@@ -2,8 +2,9 @@ function dydt = mod_eqns(t,y,params,varargin)
 % Model equations for estrogen-RAS model
 
 % estrogen
-do_EST = false; % change estrogen with time
+do_EST = 0; % change estrogen with time
 do_EST_RAS = do_EST; % estrogen impact on RAS
+EST_pct = 1; % percent of baseline estrogen
 
 % RASi
 do_ACEi = false;
@@ -18,10 +19,20 @@ for ii = 1:2:length(varargin)
     elseif strcmp(varargin{ii}, 'do_EST')
         temp = varargin{ii+1};
         do_EST = temp(1);
-        if length(temp) == 2
-            do_EST_RAS = temp(2);
-        else
-            do_EST_RAS = do_EST;
+        if do_EST == 1
+            if length(temp) == 2
+                do_EST_RAS = temp(2);
+            else
+                do_EST_RAS = do_EST;
+            end
+        elseif do_EST == 2
+            if length(temp) == 3
+                do_EST_RAS = temp(2);
+                EST_pct = temp(3);
+            else 
+                fprintf('length of do_EST entry: %i \n', length(temp))
+                error('do_EST must have entry for do_EST, do_EST_RAS, and EST_pct')
+            end
         end
     elseif strcmp(varargin{ii}, 'do_ACEi')
         temp = varargin{ii+1};
@@ -89,10 +100,14 @@ eAT2R = params(27);
 dydt = zeros(length(y),1);
 
 % Estrogen
-if do_EST
+if do_EST == 1
     EST = get_estrogen(t); 
-else
+elseif do_EST == 0
     EST = 1;
+elseif do_EST == 2
+    EST = EST_pct;
+else
+    fprintf('WARNING: do_EST not set up correctly \n')
 end
 
 
