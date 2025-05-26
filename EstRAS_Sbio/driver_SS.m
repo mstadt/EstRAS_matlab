@@ -5,7 +5,7 @@ clearvars; % clear
 model = copyobj(sbioloadproject("RAS_EST_v1.sbproj").m1);
 
 sbioaccelerate(model) % accelerate model
-getequations(model)
+getequations(model) % print model equations
 
 % Change stop time
 tf = 80*24*365; % 80 years
@@ -23,7 +23,7 @@ set(solverOptions, 'MaxStep', 0.5*365*24); % at least 2 time points per year
 rule = model.Rules(1);
 rule.Active = false;
 
-% set estrogen level
+% set estrogen level at fixed level
 EST_pct = 1;
 param = sbioselect(model, "Type", "parameter","Name","EST");
 param.Value = EST_pct; % set EST to fixed value
