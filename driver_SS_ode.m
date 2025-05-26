@@ -12,8 +12,14 @@ p = set_params();
 do_EST = 2; % do estrogen effects - 0 - no estrogen, 1: age-related estrogen decline, 2: fix estrogen at EST_pct
 do_EST_RAS = 1; % do estrogen effects on RAS
 EST_pct = 1; % percent of baseline estrogen
-do_ACEi = false;
-do_ARB = false;
+
+do_ACEi = 1;
+pct_inhib_ACEi = 0.9;
+age_ACEi = 0;
+
+do_ARB = 0;
+pct_inhib_ARB = 0.9;
+age_ARB = 0;
 
 %% Run simulation from initial condition
 % set initial conditions
@@ -30,8 +36,8 @@ opts_ode = odeset('RelTol', 1.0e-6, 'AbsTol', 1e-9, 'MaxStep', 10);
 
 [t,y] = ode15s(@(t,y) mod_eqns(t,y,params,...
                         'do_EST', [do_EST, do_EST_RAS, EST_pct],...
-                        'do_ACEi', do_ACEi,...
-                        'do_ARB', do_ARB),...
+                        'do_ACEi', [do_ACEi, age_ACEi, pct_inhib_ACEi],...
+                        'do_ARB', [do_ARB, age_ARB, pct_inhib_ARB]),...
                         tspan, IC, opts_ode);
 
 % Plot figure
